@@ -7,14 +7,28 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//
+//struct ContentView: View {
+//    #if os(iOS)
+//    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+//    #endif
+//    
+//    @ViewBuilder var body: some View {
+//        #if os(iOS)
+//        if horizontalSizeClass == .compact {
+//            AppTabNavigation()
+//        } else {
+//            AppSidebarNavigation()
+//        }
+//        #else
+//        AppSidebarNavigation()
+//            .frame(minWidth: 900, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+//        #endif
+//    }
+//}
+//
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}

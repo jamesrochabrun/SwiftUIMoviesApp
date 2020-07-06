@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct MovieFeedResult: Decodable {
+    let results: [Movie]
+}

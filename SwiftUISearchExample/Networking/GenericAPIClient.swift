@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol GenericAPIClient {
     var session: URLSession { get }
@@ -15,6 +16,30 @@ protocol GenericAPIClient {
 extension GenericAPIClient {
     
     typealias JSONTaskCompletionHandler = (Decodable?, APIError?) -> Void
+
+    
+    func fetch<T: Decodable>(with request: URLRequest, decode: @escaping (Decodable) -> T?, completion: @escaping (Result<T, APIError>) -> Void) {
+        let task = decodingTask(with: request, decodingType: T.self) { (json , error) in
+            
+            DispatchQueue.main.async {
+                guard let json = json else {
+                    if let error = error {
+                        completion(Result.failure(error))
+                    } else {
+                        completion(Result.failure(.invalidData))
+                    }
+                    return
+                }
+                if let value = decode(json) {
+                    completion(.success(value))
+                } else {
+                    completion(.failure(.jsonParsingFailure))
+                }
+            }
+        }
+        task.resume()
+    }
+    
     private func decodingTask<T: Decodable>(with request: URLRequest, decodingType: T.Type, completionHandler completion: @escaping JSONTaskCompletionHandler) -> URLSessionDataTask {
         
         let task = session.dataTask(with: request) { data, response, error in
@@ -41,27 +66,5 @@ extension GenericAPIClient {
             }
         }
         return task
-    }
-    
-    func fetch<T: Decodable>(with request: URLRequest, decode: @escaping (Decodable) -> T?, completion: @escaping (Result<T, APIError>) -> Void) {
-        let task = decodingTask(with: request, decodingType: T.self) { (json , error) in
-            
-            DispatchQueue.main.async {
-                guard let json = json else {
-                    if let error = error {
-                        completion(Result.failure(error))
-                    } else {
-                        completion(Result.failure(.invalidData))
-                    }
-                    return
-                }
-                if let value = decode(json) {
-                    completion(.success(value))
-                } else {
-                    completion(.failure(.jsonParsingFailure))
-                }
-            }
-        }
-        task.resume()
     }
 }

@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Combine
 
-class MovieClient: GenericAPIClient {
+class MovieClient: CombineAPI {
     
     let session: URLSession
     
@@ -19,12 +20,31 @@ class MovieClient: GenericAPIClient {
         self.init(configuration: .default)
     }
     
-    //in the signature of the function in the success case we define the Class type thats is the generic one in the API
-    func getFeed(from movieFeedType: MovieFeed, completion: @escaping (Result<MovieFeedResult?, APIError>) -> Void) {
+    func getFeed(_ feedKind: MovieFeed) -> AnyPublisher<MovieFeedResult, Error> {
+        execute(feedKind.request, decodingType: MovieFeedResult.self)
+    }
+}
+
+protocol CombineAPI {
+    var session: URLSession { get }
+    func execute<T>(_ request: URLRequest,
+                            decodingType: T.Type) -> AnyPublisher<T, Error> where T: Decodable
+}
+
+extension CombineAPI {
+    
+    func execute<T>(_ request: URLRequest,
+                    decodingType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
         
-        fetch(with: movieFeedType.request , decode: { json -> MovieFeedResult? in
-            guard let movieFeedResult = json as? MovieFeedResult else { return  nil }
-            return movieFeedResult
-        }, completion: completion)
+        return session.dataTaskPublisher(for: request)
+            .tryMap {
+                guard let response = $0.response as? HTTPURLResponse, response.statusCode == 200 else {
+                    throw APIError.responseUnsuccessful
+                }
+                return $0.data
+            }
+            .decode(type: T.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }

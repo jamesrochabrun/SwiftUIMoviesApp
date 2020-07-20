@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import Combine
 
 @main
 struct SwiftUISearchExampleApp: App {
     
-    @StateObject private var model = MovieModel()
+    @StateObject private var model = MovieCombineModel()
 
     var body: some Scene {
         WindowGroup {
-            ItemsList(model.items) { movie in
+            ItemsList(model.movies) { movie in
                 MovieRow(movie: movie)
             }
         }
@@ -22,22 +23,20 @@ struct SwiftUISearchExampleApp: App {
 }
 
 
-final class MovieModel: ObservableObject {
+final class MovieCombineModel: ObservableObject {
     
+    private var cancellable: AnyCancellable?
     private let client = MovieClient()
     
-    @Published var items: [Movie] = []
+    @Published var movies: [Movie] = []
     
     init() {
-        client.getFeed(from: .nowPlaying) { result in
-            switch result {
-            case .success(let movieFeedResult):
-                guard let movieResults = movieFeedResult?.results else { return }
-                self.items = movieResults
-                dump(movieResults)
-            case .failure(let error):
-                print("the error \(error)")
-            }
-        }
+        cancellable = client.getFeed(.nowPlaying)
+            .sink(receiveCompletion: { _ in
+             // Here the actual subscriber is created. As mentioned earlier, the sink-subscriber comes with a closure, that lets us handle the received value when it’s ready from the publisher.
+            },
+                  receiveValue: {
+                    self.movies = $0.results // 7
+                  })
     }
 }

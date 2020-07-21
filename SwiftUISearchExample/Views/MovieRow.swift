@@ -6,25 +6,35 @@
 //
 
 import SwiftUI
+import Combine
 
 struct MovieRow: View {
     
     let movie: Movie
     
+    var cancellable: AnyCancellable?
+    
     var body: some View {
-        HStack(alignment: .top) {
-            Image(uiImage: UIImage())
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 80, height: 80)
-                .background(Color.black)
-                .cornerRadius(20)
-                .padding(.trailing, 10)
-            VStack(alignment: .leading, spacing: 8.0) {
+        HStack(alignment: .top, spacing: 15) {
+            
+//            Image(uiImage: UIImage())
+//                .resizable()
+//                .aspectRatio(contentMode: .fit)
+//                .frame(width: 80, height: 80)
+//                .background(Color.black)
+//                .cornerRadius(20)
+//                .padding(.trailing, 10)
+//                .onAppear {
+//
+//                }
+            LoaderImageView(urls: (urlString: movie.poster_path, lowResURLString: movie.backdrop_path), errorImage: UIImage(systemName: "pause.rectangle.fill"))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            
+            VStack(alignment: .leading, spacing: 10.0) {
                 Text(movie.title)
                     .font(.system(size: 20, weight: .bold))
                 Text(movie.overview ?? "No data")
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                   // .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.subheadline)
                     .foregroundColor(Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)))
                 Text(movie.release_date ?? "fuck")
@@ -39,6 +49,6 @@ struct MovieRow: View {
 
 struct ItemListRow_Previews: PreviewProvider {
     static var previews: some View {
-        MovieRow(movie: Movie.emptyMovie)
+        MovieRow(movie: Movie.emptyMovie, cancellable: nil)
     }
 }

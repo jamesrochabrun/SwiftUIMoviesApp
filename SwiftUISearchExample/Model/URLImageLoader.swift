@@ -11,26 +11,59 @@ import UIKit
 
 final class URLImageLoader: ObservableObject {
     
+    // MARK:- Nested class
+    final class ImageCache {
+        private var cache = NSCache<NSString, UIImage>()
+        private init(){}
+        func getForKey(_ key: String) -> UIImage? {
+            cache.object(forKey: NSString(string: key))
+        }
+        
+        func setForKey(_ key: String, image: UIImage) {
+            cache.setObject(image, forKey: NSString(string: key))
+        }
+        static let shared = ImageCache()
+    }
+    
+    // MARK:- Publisher
     @Published var image: UIImage?
     
-    static let graphicsBaseURL = "https://image.tmdb.org/t/p/w500"
-
-    private var urlString: String?
-    private var urlLowResString: String?
+    // MARK:- Private Properties
+    private let imageCache = ImageCache.shared
+    private let urlString: String?
+    private let urlLowResString: String?
     private let errorImage: UIImage?
+    private let retries: Int
     
-    init(urls: (urlString: String?, lowResURLString: String?), errorImage: UIImage?) {
-        self.urlString = Self.graphicsBaseURL + (urls.urlString ?? "")
+    // MARK:- Lifecycle
+    init(urls: (urlString: String?, lowResURLString: String?),
+         errorImage: UIImage?, retries: Int = 1) {
+        self.urlString = urls.urlString
         self.urlLowResString = urls.lowResURLString
         self.errorImage = errorImage
+        self.retries = retries
         self.load()
     }
     
-    func load() {
+    // MARK:- Private methods.
+    private func load() {
+        guard !loadImageFromCache() else {
+            print("zizou CACHE HIT")
+            return }
+        print("zizou NETWORK HIT")
+        loadImageFromURL()
+    }
+    
+    private func loadImageFromCache() -> Bool {
         guard let urlString = urlString,
-              let url = URL(string: urlString)
-        else { return }
-        
+        let cacheImage = imageCache.getForKey(urlString)
+        else { return false }
+        image = cacheImage
+        return true
+    }
+    
+    private func loadImageFromURL() {
+        guard let urlString = urlString, let url = URL(string: urlString) else { return }
         let request = URLRequest(url: url)
         
         URLSession.shared.dataTaskPublisher(for: request)
@@ -43,17 +76,20 @@ final class URLImageLoader: ObservableObject {
                 }
                 return URLSession.shared.dataTaskPublisher(for: lowResURL)
             }
-            .tryMap { data, response -> UIImage in
-                guard let response = response as? HTTPURLResponse, response.statusCode == 200,
-                      let image = UIImage(data: data)
+            .tryMap {
+                guard let response = $0.response as? HTTPURLResponse,
+                      response.statusCode == 200,
+                      let image = UIImage(data: $0.data)
                 else {
                     throw APIError.responseUnsuccessful
                 }
+                self.imageCache.setForKey(urlString, image: image)
                 return image
             }
-            .retry(1)
+            .retry(retries)
             .replaceError(with: errorImage)
             .receive(on: DispatchQueue.main)
             .assign(to: $image)
     }
 }
+

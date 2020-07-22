@@ -10,7 +10,7 @@ import Combine
 
 struct MovieRow: View {
     
-    let movie: Movie
+    let movie: MovieViewModel
     
     var cancellable: AnyCancellable?
     
@@ -27,17 +27,16 @@ struct MovieRow: View {
 //                .onAppear {
 //
 //                }
-            LoaderImageView(urls: (urlString: movie.poster_path, lowResURLString: movie.backdrop_path), errorImage: UIImage(systemName: "pause.rectangle.fill"))
+            LoaderImageView(urls: (urlString: movie.posterPathHighResURLString, lowResURLString: movie.posterPathLowResURLString), errorImage: UIImage(systemName: "pause.rectangle.fill"))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
-            
             VStack(alignment: .leading, spacing: 10.0) {
                 Text(movie.title)
                     .font(.system(size: 20, weight: .bold))
-                Text(movie.overview ?? "No data")
+                Text(movie.overview)
                    // .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.subheadline)
                     .foregroundColor(Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)))
-                Text(movie.release_date ?? "fuck")
+                Text(movie.releaseDate)
                     .font(.caption)
                     .fontWeight(.bold)
                     .foregroundColor(.secondary) // adaptive to dark mode
@@ -47,8 +46,8 @@ struct MovieRow: View {
     }
 }
 
-struct ItemListRow_Previews: PreviewProvider {
-    static var previews: some View {
-        MovieRow(movie: Movie.emptyMovie, cancellable: nil)
-    }
-}
+//struct ItemListRow_Previews: PreviewProvider {
+//    static var previews: some View {
+//        MovieRow(movie: Movie.emptyMovie, cancellable: nil)
+//    }
+//}

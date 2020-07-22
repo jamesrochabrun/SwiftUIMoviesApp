@@ -27,14 +27,14 @@ class MovieClient: CombineAPI {
 
 protocol CombineAPI {
     var session: URLSession { get }
-    func execute<T>(_ request: URLRequest,
-                            decodingType: T.Type) -> AnyPublisher<T, Error> where T: Decodable
+    func execute<T>(_ request: URLRequest, decodingType: T.Type, retries: Int) -> AnyPublisher<T, Error> where T: Decodable
 }
 
 extension CombineAPI {
     
     func execute<T>(_ request: URLRequest,
-                    decodingType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
+                    decodingType: T.Type,
+                    retries: Int = 0) -> AnyPublisher<T, Error> where T: Decodable {
         
         return session.dataTaskPublisher(for: request)
             .tryMap {
@@ -45,6 +45,7 @@ extension CombineAPI {
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .receive(on: DispatchQueue.main)
+            .retry(retries)
             .eraseToAnyPublisher()
     }
 }

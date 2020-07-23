@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Movie: Decodable, Identifiable {
+struct Movie: Decodable {
     
     let id: Int
     let title: String
@@ -36,11 +36,7 @@ struct Movie: Decodable, Identifiable {
     }
 }
 
-extension MovieViewModel: Searchable {
-    var query: String { title }
-}
-
-struct MovieViewModel {
+struct MovieViewModel: Identifiable {
     
     let id: Int
     let title: String

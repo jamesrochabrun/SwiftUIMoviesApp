@@ -35,44 +35,6 @@ public struct FilteredList<Element, FilterKey, RowContent>: View
     }
 }
 
-
-
-struct ItemsList<Element: Searchable, RowContent: View>: View {
-    
-    private let rowContent: (Element) -> RowContent
-    private let items: [Element]
-    
-    @State var searchPhrase = ""
-    
-    public init(
-        _ items: [Element],
-        @ViewBuilder rowContent: @escaping (Element) -> RowContent
-    ) {
-        self.items = items
-        self.rowContent = rowContent
-    }
-    
-    var body: some View {
-        VStack {
-            TextField("Search", text: $searchPhrase)
-                .frame(height: 60)
-                .background(Color(#colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)))
-                .padding(.leading, 10)
-                .padding(.trailing, 10)
-            FilteredList(items,
-                         filterBy: \.query,
-                         isIncluded:  { query in
-                            return query.hasSubstring(searchPhrase.lowercased()) },
-                         rowContent: rowContent)
-        }
-    }
-}
-
-protocol Searchable: Identifiable {
-    var query: String { get }
-}
-
-
 extension String {
     /// Returns `true` if this string contains the provided substring,
     /// or if the substring is empty. Otherwise, returns `false`.

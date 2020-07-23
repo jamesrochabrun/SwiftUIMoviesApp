@@ -30,7 +30,6 @@
 		7B58B5F124C1C183007F72AF /* MoviesAppClipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58B5F024C1C183007F72AF /* MoviesAppClipTests.swift */; };
 		7B58B5FC24C1C183007F72AF /* MoviesAppClipUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58B5FB24C1C183007F72AF /* MoviesAppClipUITests.swift */; };
 		7B58B60024C1C183007F72AF /* MoviesAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 7B58B5DB24C1C17C007F72AF /* MoviesAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		7B78547824C86ACD0033B936 /* GenericList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78547724C86ACD0033B936 /* GenericList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,7 +120,6 @@
 		7B58B5F724C1C183007F72AF /* MoviesAppClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoviesAppClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B58B5FB24C1C183007F72AF /* MoviesAppClipUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesAppClipUITests.swift; sourceTree = "<group>"; };
 		7B58B5FD24C1C183007F72AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7B78547724C86ACD0033B936 /* GenericList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,7 +238,6 @@
 			isa = PBXGroup;
 			children = (
 				7B4486F024AEB7C900102E45 /* FilteredList.swift */,
-				7B78547724C86ACD0033B936 /* GenericList.swift */,
 				7B44870124B221C100102E45 /* MovieRow.swift */,
 				7B2AB90E24C6F8A200F4D698 /* ImageViewLoader.swift */,
 			);
@@ -530,7 +527,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B4486F124AEB7C900102E45 /* FilteredList.swift in Sources */,
-				7B78547824C86ACD0033B936 /* GenericList.swift in Sources */,
 				7B4486FE24B0999200102E45 /* MovieFeedResult.swift in Sources */,
 				7B44870224B221C200102E45 /* MovieRow.swift in Sources */,
 				7B44870024B09A1F00102E45 /* MovieFeed.swift in Sources */,

@@ -10,6 +10,7 @@ import Combine
 
 struct MovieRow: View {
     
+    // MARK:- Dependency injection
     let movie: MovieViewModel
     
     var body: some View {
@@ -25,7 +26,7 @@ struct MovieRow: View {
                 Text(movie.title)
                     .font(.system(size: 20, weight: .bold))
                 Text(movie.overview)
-                   // .frame(maxWidth: .infinity, alignment: .leading)
+                    // .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.subheadline)
                     .foregroundColor(Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)))
                 Text(movie.releaseDate)

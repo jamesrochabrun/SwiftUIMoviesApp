@@ -12,23 +12,15 @@ struct MovieRow: View {
     
     let movie: MovieViewModel
     
-    var cancellable: AnyCancellable?
-    
     var body: some View {
-        HStack(alignment: .top, spacing: 15) {
+        
+        HStack(alignment: .top, spacing: 20) {
             
-//            Image(uiImage: UIImage())
-//                .resizable()
-//                .aspectRatio(contentMode: .fit)
-//                .frame(width: 80, height: 80)
-//                .background(Color.black)
-//                .cornerRadius(20)
-//                .padding(.trailing, 10)
-//                .onAppear {
-//
-//                }
             LoaderImageView(urls: (urlString: movie.posterPathHighResURLString, lowResURLString: movie.posterPathLowResURLString), errorImage: UIImage(systemName: "pause.rectangle.fill"))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 100, height: 150)
+            
             VStack(alignment: .leading, spacing: 10.0) {
                 Text(movie.title)
                     .font(.system(size: 20, weight: .bold))
@@ -48,6 +40,6 @@ struct MovieRow: View {
 
 //struct ItemListRow_Previews: PreviewProvider {
 //    static var previews: some View {
-//        MovieRow(movie: Movie.emptyMovie, cancellable: nil)
+//        MovieRow(movie: Movie.emptyMovie)
 //    }
 //}

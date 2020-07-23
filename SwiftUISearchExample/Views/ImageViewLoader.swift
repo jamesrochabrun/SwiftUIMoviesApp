@@ -12,7 +12,7 @@ struct LoaderImageView: View {
     @ObservedObject var imageLoader: URLImageLoader
     
     private let errorImage: UIImage?
-
+    
     init(urls: (urlString: String?, lowResURLString: String?), errorImage: UIImage?) {
         imageLoader = URLImageLoader(urls: urls, errorImage: errorImage)
         self.errorImage = errorImage
@@ -21,8 +21,5 @@ struct LoaderImageView: View {
     var body: some View {
         Image(uiImage: imageLoader.image ?? self.errorImage!)
             .resizable()
-           // .scaledToFit()
-            .scaledToFill()
-            .frame(width: 100, height: 100)
     }
 }

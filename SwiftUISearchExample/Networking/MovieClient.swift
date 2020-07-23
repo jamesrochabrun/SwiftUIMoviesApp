@@ -8,10 +8,12 @@
 import Foundation
 import Combine
 
-class MovieClient: CombineAPI {
+final class MovieClient: CombineAPI {
     
+    // 1
     let session: URLSession
     
+    // 2
     init(configuration: URLSessionConfiguration) {
         self.session = URLSession(configuration: configuration)
     }
@@ -20,6 +22,7 @@ class MovieClient: CombineAPI {
         self.init(configuration: .default)
     }
     
+    // 3
     func getFeed(_ feedKind: MovieFeed) -> AnyPublisher<MovieFeedResult, Error> {
         execute(feedKind.request, decodingType: MovieFeedResult.self)
     }
@@ -27,13 +30,14 @@ class MovieClient: CombineAPI {
 
 protocol CombineAPI {
     var session: URLSession { get }
-    func execute<T>(_ request: URLRequest, decodingType: T.Type, retries: Int) -> AnyPublisher<T, Error> where T: Decodable
+    func execute<T>(_ request: URLRequest, decodingType: T.Type, queue: DispatchQueue, retries: Int) -> AnyPublisher<T, Error> where T: Decodable
 }
 
 extension CombineAPI {
     
     func execute<T>(_ request: URLRequest,
                     decodingType: T.Type,
+                    queue: DispatchQueue = .main,
                     retries: Int = 0) -> AnyPublisher<T, Error> where T: Decodable {
         
         return session.dataTaskPublisher(for: request)
@@ -44,7 +48,7 @@ extension CombineAPI {
                 return $0.data
             }
             .decode(type: T.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
+            .receive(on: queue)
             .retry(retries)
             .eraseToAnyPublisher()
     }

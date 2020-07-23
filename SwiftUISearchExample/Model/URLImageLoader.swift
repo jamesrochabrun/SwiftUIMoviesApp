@@ -47,10 +47,7 @@ final class URLImageLoader: ObservableObject {
     
     // MARK:- Private methods.
     private func load() {
-        guard !loadImageFromCache() else {
-            print("zizou CACHE HIT")
-            return }
-        print("zizou NETWORK HIT")
+        guard !loadImageFromCache() else { return }
         loadImageFromURL()
     }
     

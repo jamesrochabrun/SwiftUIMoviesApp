@@ -10,10 +10,14 @@ import Combine
 
 final class MoviesProvider: ObservableObject {
     
+    // MARK:- Subscribers
     private var cancellable: AnyCancellable?
-    private let client = MovieClient()
     
+    // MARK:- Publishers
     @Published var movies: [MovieViewModel] = []
+
+    // MARK:- Private properties
+    private let client = MovieClient()
     
     init() {
         cancellable = client.getFeed(.nowPlaying)

@@ -36,6 +36,7 @@ public struct FilteredList<Element, FilterKey, RowContent>: View
 }
 
 
+
 struct ItemsList<Element: Searchable, RowContent: View>: View {
     
     private let rowContent: (Element) -> RowContent

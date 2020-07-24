@@ -30,7 +30,10 @@ final class MovieClient: CombineAPI {
 
 protocol CombineAPI {
     var session: URLSession { get }
-    func execute<T>(_ request: URLRequest, decodingType: T.Type, queue: DispatchQueue, retries: Int) -> AnyPublisher<T, Error> where T: Decodable
+    func execute<T>(_ request: URLRequest,
+                    decodingType: T.Type,
+                    queue: DispatchQueue,
+                    retries: Int) -> AnyPublisher<T, Error> where T: Decodable
 }
 
 extension CombineAPI {

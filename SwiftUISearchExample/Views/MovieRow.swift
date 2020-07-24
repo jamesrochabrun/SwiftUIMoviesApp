@@ -17,7 +17,7 @@ struct MovieRow: View {
         
         HStack(alignment: .top, spacing: 20) {
             
-            LoaderImageView(urls: (urlString: movie.posterPathHighResURLString, lowResURLString: movie.posterPathLowResURLString), errorImage: UIImage(systemName: "pause.rectangle.fill"))
+            ImageViewCache(urls: (urlString: movie.posterPathHighResURLString, lowResURLString: movie.posterPathLowResURLString), errorImage: UIImage(systemName: "pause.rectangle.fill"))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 100, height: 150)

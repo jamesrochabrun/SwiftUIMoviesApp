@@ -7,14 +7,15 @@
 
 import SwiftUI
 
-struct LoaderImageView: View {
+struct ImageViewCache: View {
     
-    @ObservedObject var imageLoader: URLImageLoader
+    // MARK:- Subscribers
+    @ObservedObject var imageLoader: ImageLoader
     
     private let errorImage: UIImage?
     
     init(urls: (urlString: String?, lowResURLString: String?), errorImage: UIImage?) {
-        imageLoader = URLImageLoader(urls: urls, errorImage: errorImage)
+        imageLoader = ImageLoader(urls: urls, errorImage: errorImage)
         self.errorImage = errorImage
     }
     

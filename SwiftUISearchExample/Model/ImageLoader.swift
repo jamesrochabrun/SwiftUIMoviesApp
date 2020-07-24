@@ -9,20 +9,21 @@ import Foundation
 import Combine
 import UIKit
 
-final class URLImageLoader: ObservableObject {
+final class ImageLoader: ObservableObject {
     
     // MARK:- Nested class
     final class ImageCache {
+        static let shared = ImageCache()
+        private init() {}
+        
         private var cache = NSCache<NSString, UIImage>()
-        private init(){}
-        func getForKey(_ key: String) -> UIImage? {
+        func imageForKey(_ key: String) -> UIImage? {
             cache.object(forKey: NSString(string: key))
         }
         
-        func setForKey(_ key: String, image: UIImage) {
+        func setImageForKey(_ key: String, image: UIImage) {
             cache.setObject(image, forKey: NSString(string: key))
         }
-        static let shared = ImageCache()
     }
     
     // MARK:- Publisher
@@ -53,7 +54,7 @@ final class URLImageLoader: ObservableObject {
     
     private func loadImageFromCache() -> Bool {
         guard let urlString = urlString,
-        let cacheImage = imageCache.getForKey(urlString)
+        let cacheImage = imageCache.imageForKey(urlString)
         else { return false }
         image = cacheImage
         return true
@@ -80,7 +81,7 @@ final class URLImageLoader: ObservableObject {
                 else {
                     throw APIError.responseUnsuccessful
                 }
-                self.imageCache.setForKey(urlString, image: image)
+                self.imageCache.setImageForKey(urlString, image: image)
                 return image
             }
             .retry(retries)
